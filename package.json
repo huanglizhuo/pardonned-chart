@@ -1,0 +1,33 @@
+{
+  "name": "pardonned-chart",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "astro:dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler pages dev ./dist",
+    "astro": "astro",
+    "seed": "tsx scripts/seed-kv.ts"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/cloudflare": "^12.0.0",
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "astro": "^5.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.13.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241218.0",
+    "@types/node": "^25.6.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.81.1"
+  }
+}

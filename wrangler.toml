@@ -1,0 +1,9 @@
+name = "pardonned-chart"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+[[kv_namespaces]]
+binding = "PARDONS_KV"
+id = "18d8f1e09eab4b04a05a0c0e680b8447"
+preview_id = "0859fc4dccf74e4e9ed8530df9f46e52"
