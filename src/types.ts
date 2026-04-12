@@ -44,6 +44,17 @@ export const ADMIN_COLORS: Record<AdminSlug, string> = {
   'clinton-1': '#c084fc',
 };
 
+export const CATEGORY_ORDER = [
+  'drug offense',
+  'fraud',
+  'financial crime',
+  'violent crime',
+  'firearms',
+  'FACE act',
+  'immigration',
+  'other',
+] as const;
+
 export const CATEGORY_COLORS: Record<string, string> = {
   'drug offense':    '#a855f7',
   'fraud':           '#f97316',

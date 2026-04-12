@@ -6,39 +6,62 @@ import AdminComparison from './AdminComparison';
 import PardonVsCommutation from './PardonVsCommutation';
 import TopDistricts from './TopDistricts';
 import FinancialImpact from './FinancialImpact';
+import FinancialBubbles from './FinancialBubbles';
 import PardonTable from './PardonTable';
+import EndOfTermChart from './EndOfTermChart';
+import SankeyChart from './SankeyChart';
+import ChoroplethMap from './ChoroplethMap';
+import CalendarHeatmapChart from './CalendarHeatmap';
 
 export default function Dashboard() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeAdmin, setActiveAdmin] = useState<string | null>(null);
+  const [activeState, setActiveState] = useState<string | null>(null);
 
   return (
     <div className="space-y-8">
-      {/* Stats */}
+      {/* ── Stats ── */}
       <StatsBar />
 
-      {/* Timeline full width */}
+      {/* ── Geography ── */}
+      <ChoroplethMap onStateClick={setActiveState} activeState={activeState} />
+
+      {/* ── Yearly timeline ── */}
       <TimelineChart />
 
-      {/* Category + Admin side by side */}
+      {/* ── End-of-term surge ── */}
+      <EndOfTermChart onAdminClick={setActiveAdmin} activeAdmin={activeAdmin} />
+
+      {/* ── Calendar heatmap ── */}
+      <CalendarHeatmapChart />
+
+      {/* ── Category + Admin side by side ── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <CategoryDonut
-          onCategoryClick={setActiveCategory}
-          activeCategory={activeCategory}
-        />
+        <CategoryDonut onCategoryClick={setActiveCategory} activeCategory={activeCategory} />
         <AdminComparison />
       </div>
 
-      {/* Pardon vs Commutation + Financial */}
+      {/* ── Sankey pipeline ── */}
+      <SankeyChart />
+
+      {/* ── Pardon vs Commutation + Financial aggregates ── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <PardonVsCommutation />
         <FinancialImpact />
       </div>
 
-      {/* Top Districts full width */}
+      {/* ── Financial bubbles (individual) ── */}
+      <FinancialBubbles />
+
+      {/* ── Top Districts ── */}
       <TopDistricts />
 
-      {/* Table full width */}
-      <PardonTable categoryFilter={activeCategory} />
+      {/* ── Table (responds to category, admin, state filters) ── */}
+      <PardonTable
+        categoryFilter={activeCategory}
+        adminFilter={activeAdmin}
+        stateFilter={activeState}
+      />
     </div>
   );
 }

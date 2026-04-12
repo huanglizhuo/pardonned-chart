@@ -4,9 +4,33 @@ import { ADMIN_LABELS } from '../types';
 
 interface Props {
   categoryFilter?: string | null;
+  adminFilter?: string | null;
+  stateFilter?: string | null;
 }
 
-export default function PardonTable({ categoryFilter }: Props) {
+// Inline district→state for filtering (reuse same logic as groupByState)
+const STATE_NAMES_SHORT: Record<string, string> = {
+  Alabama: 'AL', Alaska: 'AK', Arizona: 'AZ', Arkansas: 'AR', California: 'CA',
+  Colorado: 'CO', Connecticut: 'CT', Delaware: 'DE', Florida: 'FL', Georgia: 'GA',
+  Hawaii: 'HI', Idaho: 'ID', Illinois: 'IL', Indiana: 'IN', Iowa: 'IA', Kansas: 'KS',
+  Kentucky: 'KY', Louisiana: 'LA', Maine: 'ME', Maryland: 'MD', Massachusetts: 'MA',
+  Michigan: 'MI', Minnesota: 'MN', Mississippi: 'MS', Missouri: 'MO', Montana: 'MT',
+  Nebraska: 'NE', Nevada: 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
+  'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND',
+  Ohio: 'OH', Oklahoma: 'OK', Oregon: 'OR', Pennsylvania: 'PA', 'Rhode Island': 'RI',
+  'South Carolina': 'SC', 'South Dakota': 'SD', Tennessee: 'TN', Texas: 'TX',
+  Utah: 'UT', Vermont: 'VT', Virginia: 'VA', Washington: 'WA', 'West Virginia': 'WV',
+  Wisconsin: 'WI', Wyoming: 'WY', 'District of Columbia': 'DC',
+};
+
+function districtState(district: string): string | null {
+  for (const [name, abbrev] of Object.entries(STATE_NAMES_SHORT)) {
+    if (district.includes(name)) return abbrev;
+  }
+  return null;
+}
+
+export default function PardonTable({ categoryFilter, adminFilter, stateFilter }: Props) {
   const { data, loading } = usePardonData();
   const [search, setSearch] = useState('');
   const [admin, setAdmin] = useState('');
@@ -16,6 +40,7 @@ export default function PardonTable({ categoryFilter }: Props) {
   const PAGE_SIZE = 20;
 
   const activeCategory = categoryFilter ?? category;
+  const activeAdmin = adminFilter ?? admin;
 
   const categories = useMemo(() => [...new Set(data.map((r) => r.category))].sort(), [data]);
   const admins = useMemo(() => [...new Set(data.map((r) => r.administrationSlug))], [data]);
@@ -24,9 +49,10 @@ export default function PardonTable({ categoryFilter }: Props) {
     const q = search.toLowerCase();
     return data.filter((r) => {
       if (q && !r.name.toLowerCase().includes(q) && !r.offense.toLowerCase().includes(q)) return false;
-      if (admin && r.administrationSlug !== admin) return false;
+      if (activeAdmin && r.administrationSlug !== activeAdmin) return false;
       if (activeCategory && r.category !== activeCategory) return false;
       if (clemency && r.clemencyType !== clemency) return false;
+      if (stateFilter && districtState(r.district ?? '') !== stateFilter) return false;
       return true;
     });
   }, [data, search, admin, activeCategory, clemency]);
@@ -54,7 +80,7 @@ export default function PardonTable({ categoryFilter }: Props) {
           className="flex-1 min-w-[200px] rounded-lg bg-slate-700 px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <select
-          value={admin}
+          value={activeAdmin}
           onChange={(e) => handleAdmin(e.target.value)}
           className="rounded-lg bg-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
@@ -84,7 +110,9 @@ export default function PardonTable({ categoryFilter }: Props) {
 
       <p className="mb-2 text-xs text-slate-400">
         {loading ? 'Loading…' : `${filtered.length.toLocaleString()} records`}
-        {categoryFilter && <span className="ml-2 text-indigo-400">· filtered by chart: {categoryFilter}</span>}
+        {categoryFilter && <span className="ml-2 text-indigo-400">· category: {categoryFilter}</span>}
+        {adminFilter && <span className="ml-2 text-red-400">· admin: {ADMIN_LABELS[adminFilter as keyof typeof ADMIN_LABELS] ?? adminFilter}</span>}
+        {stateFilter && <span className="ml-2 text-emerald-400">· state: {stateFilter}</span>}
       </p>
 
       {/* Table */}
