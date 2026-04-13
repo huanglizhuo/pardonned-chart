@@ -1,6 +1,51 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { usePardonData } from '../hooks/usePardonData';
 import { ADMIN_LABELS } from '../types';
+
+interface TruncatedCellProps {
+  text: string;
+  className?: string;
+}
+
+function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
+  const ref = useRef<HTMLTableCellElement>(null);
+  const [popup, setPopup] = useState<{ x: number; y: number } | null>(null);
+
+  function handleMouseEnter(e: React.MouseEvent<HTMLTableCellElement>) {
+    const el = ref.current;
+    if (el && el.scrollWidth > el.offsetWidth) {
+      setPopup({ x: e.clientX, y: e.clientY });
+    }
+  }
+
+  function handleMouseMove(e: React.MouseEvent<HTMLTableCellElement>) {
+    if (popup) setPopup({ x: e.clientX, y: e.clientY });
+  }
+
+  function handleMouseLeave() {
+    setPopup(null);
+  }
+
+  return (
+    <td
+      ref={ref}
+      className={`truncate ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {text}
+      {popup && (
+        <div
+          className="fixed z-50 max-w-sm rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-xs text-slate-200 shadow-xl pointer-events-none"
+          style={{ left: popup.x + 12, top: popup.y + 16 }}
+        >
+          {text}
+        </div>
+      )}
+    </td>
+  );
+}
 
 interface Props {
   categoryFilter?: string | null;
@@ -144,7 +189,7 @@ export default function PardonTable({ categoryFilter, adminFilter, stateFilter }
                   </span>
                 </td>
                 <td className="py-2 pr-4 text-slate-300">{r.category}</td>
-                <td className="py-2 pr-4 text-slate-300 max-w-[260px] truncate" title={r.offense}>{r.offense}</td>
+                <TruncatedCell text={r.offense} className="py-2 pr-4 text-slate-300 max-w-[260px]" />
                 <td className="py-2 pr-4 text-slate-300 max-w-[160px] truncate" title={r.district}>{r.district}</td>
                 <td className="py-2">
                   <span className={`rounded px-2 py-0.5 text-xs font-medium ${
