@@ -64,9 +64,12 @@ interface LinkTooltipProps {
 
 function LinkTooltip({ active, payload }: LinkTooltipProps) {
   if (!active || !payload?.length) return null;
-  const { source, target, value } = payload[0].payload;
+  const item = payload[0]?.payload;
+  // Node hover: payload has no source/target — skip silently
+  if (!item?.source || !item?.target || item.value == null) return null;
+  const { source, target, value } = item;
   const srcLabel = ADMIN_LABELS[source.name as keyof typeof ADMIN_LABELS] ?? source.name;
-  const tgtLabel = target.name;
+  const tgtLabel = ADMIN_LABELS[target.name as keyof typeof ADMIN_LABELS] ?? target.name;
   return (
     <div className="rounded-lg bg-slate-900 p-2 text-xs border border-slate-700 shadow-lg">
       <span className="text-white font-semibold">{value.toLocaleString()}</span>
