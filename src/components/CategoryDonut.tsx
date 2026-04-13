@@ -3,7 +3,7 @@ import {
 } from 'recharts';
 import { usePardonData } from '../hooks/usePardonData';
 import { groupByCategory } from '../utils/dataTransforms';
-import { CATEGORY_COLORS } from '../types';
+import { CATEGORY_COLORS, RECHARTS_TOOLTIP } from '../types';
 
 interface Props {
   onCategoryClick?: (category: string | null) => void;
@@ -17,9 +17,9 @@ export default function CategoryDonut({ onCategoryClick, activeCategory }: Props
   const chartData = groupByCategory(data);
 
   return (
-    <section className="rounded-xl bg-slate-800 p-6 shadow">
+    <section className="rounded-xl bg-slate-800 shadow-lg ring-1 ring-white/5 p-6">
       <h2 className="mb-1 text-lg font-semibold text-white">By Category</h2>
-      <p className="mb-3 text-xs text-slate-400">Click a segment to filter the table</p>
+      <p className="mb-4 text-xs text-slate-400">Click a segment to filter the table</p>
       <ResponsiveContainer width="100%" height={280}>
         <PieChart>
           <Pie
@@ -47,11 +47,12 @@ export default function CategoryDonut({ onCategoryClick, activeCategory }: Props
             ))}
           </Pie>
           <Tooltip
-            contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: 8 }}
+            {...RECHARTS_TOOLTIP}
             formatter={(val: number) => [val, 'grants']}
           />
           <Legend
             formatter={(v) => <span className="text-xs text-slate-300">{v}</span>}
+            wrapperStyle={{ fontSize: 12 }}
           />
         </PieChart>
       </ResponsiveContainer>

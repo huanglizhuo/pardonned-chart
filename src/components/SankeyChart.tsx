@@ -65,13 +65,12 @@ interface LinkTooltipProps {
 function LinkTooltip({ active, payload }: LinkTooltipProps) {
   if (!active || !payload?.length) return null;
   const item = payload[0]?.payload;
-  // Node hover: payload has no source/target — skip silently
   if (!item?.source || !item?.target || item.value == null) return null;
   const { source, target, value } = item;
   const srcLabel = ADMIN_LABELS[source.name as keyof typeof ADMIN_LABELS] ?? source.name;
   const tgtLabel = ADMIN_LABELS[target.name as keyof typeof ADMIN_LABELS] ?? target.name;
   return (
-    <div className="rounded-lg bg-slate-900 p-2 text-xs border border-slate-700 shadow-lg">
+    <div className="rounded-lg bg-[#0f172a] border border-white/[0.08] px-3 py-2 text-xs shadow-2xl">
       <span className="text-white font-semibold">{value.toLocaleString()}</span>
       <span className="text-slate-400"> grants: {srcLabel} → {tgtLabel}</span>
     </div>
@@ -85,23 +84,26 @@ export default function SankeyChart() {
   const sankeyData = buildSankeyData(data);
 
   return (
-    <section className="rounded-xl bg-slate-800 p-6 shadow">
-      <h2 className="mb-1 text-lg font-semibold text-white">Clemency Pipeline</h2>
-      <p className="mb-4 text-xs text-slate-400">
-        Flow: Administration → Offense Category → Clemency Type. Width = grant count.
-      </p>
-      <ResponsiveContainer width="100%" height={500}>
-        <Sankey
-          data={sankeyData}
-          node={<CustomNode />}
-          nodePadding={8}
-          nodeWidth={12}
-          margin={{ top: 8, right: 160, bottom: 8, left: 160 }}
-          link={{ stroke: '#334155', strokeOpacity: 0.5 }}
-        >
-          <Tooltip content={<LinkTooltip />} />
-        </Sankey>
-      </ResponsiveContainer>
+    <section className="overflow-hidden rounded-xl bg-slate-800 shadow-lg ring-1 ring-white/5">
+      <div className="h-[3px] bg-gradient-to-r from-violet-500 to-purple-400" />
+      <div className="p-6">
+        <h2 className="mb-1 text-lg font-semibold text-white">Clemency Pipeline</h2>
+        <p className="mb-4 text-xs text-slate-400">
+          Flow: Administration → Offense Category → Clemency Type. Width = grant count.
+        </p>
+        <ResponsiveContainer width="100%" height={500}>
+          <Sankey
+            data={sankeyData}
+            node={<CustomNode />}
+            nodePadding={8}
+            nodeWidth={12}
+            margin={{ top: 8, right: 160, bottom: 8, left: 160 }}
+            link={{ stroke: '#334155', strokeOpacity: 0.5 }}
+          >
+            <Tooltip content={<LinkTooltip />} />
+          </Sankey>
+        </ResponsiveContainer>
+      </div>
     </section>
   );
 }

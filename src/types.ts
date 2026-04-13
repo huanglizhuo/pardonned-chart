@@ -55,6 +55,20 @@ export const CATEGORY_ORDER = [
   'other',
 ] as const;
 
+export const RECHARTS_TOOLTIP = {
+  contentStyle: {
+    backgroundColor: '#0f172a',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+    padding: '8px 12px',
+    fontSize: 12,
+  },
+  labelStyle: { color: '#e2e8f0', fontWeight: 600, marginBottom: 4 },
+  itemStyle: { color: '#cbd5e1' },
+  cursor: { fill: 'rgba(255,255,255,0.04)' },
+};
+
 export const CATEGORY_COLORS: Record<string, string> = {
   'drug offense':    '#a855f7',
   'fraud':           '#f97316',
