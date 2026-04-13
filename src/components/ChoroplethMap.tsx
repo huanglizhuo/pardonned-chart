@@ -3,7 +3,7 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { usePardonData } from '../hooks/usePardonData';
 import { groupByState, topCategoryByState } from '../utils/dataTransforms';
 
-const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+const GEO_URL = '/geo/states-10m.json';
 
 // FIPS code → state abbreviation (used by us-atlas TopoJSON)
 const FIPS_TO_ABBREV: Record<string, string> = {

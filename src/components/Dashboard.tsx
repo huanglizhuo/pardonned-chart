@@ -11,7 +11,6 @@ import PardonTable from './PardonTable';
 import EndOfTermChart from './EndOfTermChart';
 import SankeyChart from './SankeyChart';
 import ChoroplethMap from './ChoroplethMap';
-import CalendarHeatmapChart from './CalendarHeatmap';
 
 export default function Dashboard() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -23,17 +22,14 @@ export default function Dashboard() {
       {/* ── Stats ── */}
       <StatsBar />
 
-      {/* ── Geography ── */}
-      <ChoroplethMap onStateClick={setActiveState} activeState={activeState} />
-
       {/* ── Yearly timeline ── */}
       <TimelineChart />
 
+      {/* ── Geography ── */}
+      <ChoroplethMap onStateClick={setActiveState} activeState={activeState} />
+
       {/* ── End-of-term surge ── */}
       <EndOfTermChart onAdminClick={setActiveAdmin} activeAdmin={activeAdmin} />
-
-      {/* ── Calendar heatmap ── */}
-      <CalendarHeatmapChart />
 
       {/* ── Category + Admin side by side ── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
