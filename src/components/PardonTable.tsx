@@ -8,18 +8,17 @@ interface TruncatedCellProps {
 }
 
 function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
-  const ref = useRef<HTMLTableCellElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const [popup, setPopup] = useState<{ x: number; y: number } | null>(null);
 
-  function handleMouseEnter(e: React.MouseEvent<HTMLTableCellElement>) {
-    const el = ref.current;
-    // line-clamp overflow is vertical: scrollHeight > clientHeight
+  function handleMouseEnter(e: React.MouseEvent) {
+    const el = innerRef.current;
     if (el && el.scrollHeight > el.clientHeight + 2) {
       setPopup({ x: e.clientX, y: e.clientY });
     }
   }
 
-  function handleMouseMove(e: React.MouseEvent<HTMLTableCellElement>) {
+  function handleMouseMove(e: React.MouseEvent) {
     if (popup) setPopup({ x: e.clientX, y: e.clientY });
   }
 
@@ -29,13 +28,14 @@ function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
 
   return (
     <td
-      ref={ref}
-      className={`line-clamp-2 ${className}`}
+      className={className}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {text}
+      <div ref={innerRef} className="line-clamp-2">
+        {text}
+      </div>
       {popup && (
         <div
           className="fixed z-50 max-w-sm rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-xs text-slate-200 shadow-xl pointer-events-none leading-relaxed"
