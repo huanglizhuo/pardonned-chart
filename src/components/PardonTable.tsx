@@ -13,7 +13,8 @@ function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
 
   function handleMouseEnter(e: React.MouseEvent<HTMLTableCellElement>) {
     const el = ref.current;
-    if (el && el.scrollWidth > el.offsetWidth) {
+    // line-clamp overflow is vertical: scrollHeight > clientHeight
+    if (el && el.scrollHeight > el.clientHeight + 2) {
       setPopup({ x: e.clientX, y: e.clientY });
     }
   }
@@ -29,7 +30,7 @@ function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
   return (
     <td
       ref={ref}
-      className={`truncate ${className}`}
+      className={`line-clamp-2 ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -37,7 +38,7 @@ function TruncatedCell({ text, className = '' }: TruncatedCellProps) {
       {text}
       {popup && (
         <div
-          className="fixed z-50 max-w-sm rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-xs text-slate-200 shadow-xl pointer-events-none"
+          className="fixed z-50 max-w-sm rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-xs text-slate-200 shadow-xl pointer-events-none leading-relaxed"
           style={{ left: popup.x + 12, top: popup.y + 16 }}
         >
           {text}
@@ -190,7 +191,7 @@ export default function PardonTable({ categoryFilter, adminFilter, stateFilter }
                 </td>
                 <td className="py-2 pr-4 text-slate-300">{r.category}</td>
                 <TruncatedCell text={r.offense} className="py-2 pr-4 text-slate-300 max-w-[260px]" />
-                <td className="py-2 pr-4 text-slate-300 max-w-[160px] truncate" title={r.district}>{r.district}</td>
+                <TruncatedCell text={r.district} className="py-2 pr-4 text-slate-300 max-w-[160px]" />
                 <td className="py-2">
                   <span className={`rounded px-2 py-0.5 text-xs font-medium ${
                     r.administrationSlug === 'trump-2'
